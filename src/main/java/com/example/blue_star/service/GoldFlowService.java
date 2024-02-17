@@ -18,6 +18,8 @@ public class GoldFlowService {
     private String iv;
     @Value(value = "${mid}")
     private String mid;
+    @Value(value = "${notifyUrl}")
+    private String notifyUrl;
     private RestTemplate restTemplate =new RestTemplate();
     public  String getSHAEncrypt(){
         try {
@@ -29,6 +31,7 @@ public class GoldFlowService {
     public FormResponse createOrderInfo(FormRequest formRequest){
         long t =System.currentTimeMillis();
         formRequest.setTimeStamp(t);
+        formRequest.setNotifyURL(notifyUrl);
         formRequest.setMerchantOrderNo("test_store_Mpg_"+t);
         String tradeInfo = null;
         try {
