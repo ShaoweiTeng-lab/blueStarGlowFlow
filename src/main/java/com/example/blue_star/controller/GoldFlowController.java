@@ -1,8 +1,6 @@
 package com.example.blue_star.controller;
 
-import com.example.blue_star.dto.FormRequest;
-import com.example.blue_star.dto.FormResponse;
-import com.example.blue_star.dto.TransactionResponse;
+import com.example.blue_star.dto.*;
 import com.example.blue_star.service.GoldFlowService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +39,10 @@ public class GoldFlowController {
         System.out.println(data);
         goldFlowService.processResponse(data);
         return ("完成付款");
+    }
+    @PostMapping("/getOrder")
+    public GetOrderResponse getOrder(@ModelAttribute GetOrderRequest getOrderRequest){
+        return goldFlowService.getOrder(getOrderRequest);
+
     }
 }
