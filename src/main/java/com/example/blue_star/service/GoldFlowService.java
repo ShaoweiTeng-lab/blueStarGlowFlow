@@ -4,9 +4,14 @@ import com.example.blue_star.dto.*;
 import com.example.blue_star.utils.AES256CBCUtils;
 import com.example.blue_star.utils.BlueStarUtils;
 import com.example.blue_star.utils.SHA256Utils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -21,6 +26,7 @@ public class GoldFlowService {
     @Value(value = "${notifyURL}")
     private String notifyURL;
     private RestTemplate restTemplate = new RestTemplate();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public String getSHAEncrypt() {
         try {
@@ -75,19 +81,50 @@ public class GoldFlowService {
         return newData;
     }
 
-    public GetOrderResponse getOrder(GetOrderRequest getOrderRequest) {
+    public  GetOrderResponse queryOrder(GetOrderRequest getOrderRequest){
         String checkValue = BlueStarUtils.generateCheckValue(mid, getOrderRequest.getAmt(), getOrderRequest.getMerchantOrderNo(), iv, key);
-        GetOrderResponse rs = new GetOrderResponse();
-        rs.setMerchantId(mid);
-        rs.setVersion("2.0");
-        rs.setRespondType("String");
-        rs.setCheckValue(checkValue);
-        System.out.println(checkValue);
-        rs.setTimeStamp(String.valueOf(System.currentTimeMillis()));
-        rs.setMerchantOrderNo(getOrderRequest.getMerchantOrderNo());
-        rs.setAmt(getOrderRequest.getAmt());
-        return rs;
-    }
 
+
+        String url = "https://ccore.newebpay.com/API/QueryTradeInfo";
+
+        // 創建RestTemplate實例
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 設置表單數據
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        formData.add("MerchantID", mid);
+        formData.add("Version", "2.0");
+        formData.add("RespondType", "JSON");
+        formData.add("CheckValue", checkValue);
+        formData.add("TimeStamp", String.valueOf(System.currentTimeMillis()));
+        formData.add("MerchantOrderNo", getOrderRequest.getMerchantOrderNo());
+        formData.add("Amt", getOrderRequest.getAmt());
+
+        // 設置標頭
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36");
+        // 創建HttpEntity以包含表單數據和標頭
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(formData, headers);
+
+        // 發送POST請求
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("Request successful");
+            System.out.println("Response body: " + response.getBody());
+            GetOrderResponse rs = null;
+            try {
+                rs = objectMapper.readValue(response.getBody() , GetOrderResponse.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            return  rs;
+        } else {
+            System.out.println("Request failed with status code: " + response.getStatusCodeValue());
+            return null;
+        }
+
+    }
 
 }

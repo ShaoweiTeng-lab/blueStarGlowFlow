@@ -42,7 +42,8 @@ public class GoldFlowController {
     }
     @PostMapping("/getOrder")
     public GetOrderResponse getOrder(@ModelAttribute GetOrderRequest getOrderRequest){
-        return goldFlowService.getOrder(getOrderRequest);
+        // return goldFlowService.getOrder(getOrderRequest);
+        return goldFlowService.queryOrder(getOrderRequest);
 
     }
 }
