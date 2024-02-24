@@ -2,8 +2,10 @@ package com.example.blue_star.service;
 
 import com.example.blue_star.dto.FormRequest;
 import com.example.blue_star.dto.FormResponse;
+import com.example.blue_star.dto.TransactionResponse;
 import com.example.blue_star.utils.AES256CBCUtils;
 import com.example.blue_star.utils.SHA256Utils;
+import com.example.blue_star.utils.Utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +20,8 @@ public class GoldFlowService {
     private String iv;
     @Value(value = "${mid}")
     private String mid;
-    @Value(value = "${notifyUrl}")
-    private String notifyUrl;
+    @Value(value = "${notifyURL}")
+    private String notifyURL;
     private RestTemplate restTemplate =new RestTemplate();
     public  String getSHAEncrypt(){
         try {
@@ -30,12 +32,16 @@ public class GoldFlowService {
     }
     public FormResponse createOrderInfo(FormRequest formRequest){
         long t =System.currentTimeMillis();
+        formRequest.setMerchantID(mid);
+        formRequest.setRespondType("String");
+        formRequest.setNotifyURL(notifyURL);
+        formRequest.setVersion("2.0");
         formRequest.setTimeStamp(t);
-        formRequest.setNotifyURL(notifyUrl);
         formRequest.setMerchantOrderNo("test_store_Mpg_"+t);
         String tradeInfo = null;
         try {
             //將formData 進行 AES256CBC 加密
+
             tradeInfo = AES256CBCUtils.encrypt(formRequest.toFormDataString(), key, iv);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -50,4 +56,19 @@ public class GoldFlowService {
         //將加密資料返回前端後 由前端對藍星發請求,之後倒轉轉頁到藍星付款頁
         return formResponse;
     }
+
+    public  String processResponse(TransactionResponse data){
+        String newData = null;
+        try {
+            newData = AES256CBCUtils.decrypt(data.getTradeInfo(),key,iv);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // Utils.removePadding(data.getTradeInfo());
+        System.out.println(newData);
+        return  newData;
+    }
+
+
+
 }
