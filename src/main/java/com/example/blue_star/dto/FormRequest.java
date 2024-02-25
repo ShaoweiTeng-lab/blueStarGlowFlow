@@ -55,7 +55,38 @@ public class FormRequest {
                 "&MerchantOrderNo=" + MerchantOrderNo +
                 "&Amt=" + Amt +
                 "&ItemDesc=" + ItemDesc +
-                "&NotifyURL=" + NotifyURL;
+                "&LangType=" + LangType +
+                "&TradeLimit=" + TradeLimit +
+                "&ExpireDate=" + ExpireDate +
+                "&ReturnUrl=" + ReturnUrl +
+                "&NotifyURL=" + NotifyURL +
+                "&CustomerURL=" + CustomerURL +
+                "&Email=" + Email +
+                "&EmailModify=" + EmailModify +
+                "&LoginType=" + LoginType +
+                "&OrderComment=" + OrderComment +
+                "&CREDIT=" + CREDIT +
+                "&ANDROIDPAY=" + ANDROIDPAY +
+                "&SAMSUNGPAY=" + SAMSUNGPAY +
+                "&LINEPAY=" + LINEPAY +
+                "&ImageUrl=" + ImageUrl +
+                "&InstFlag=" + InstFlag +
+                "&CreditRed=" + CreditRed +
+                "&UNIONPAY=" + UNIONPAY +
+                "&CREDITAE=" + CREDITAE +
+                "&WEBATM=" + WEBATM +
+                "&VACC=" + VACC +
+                "&BankType=" + BankType +
+                "&CVS=" + CVS +
+                "&BARCODE=" + BARCODE +
+                "&ESUNWALLET=" + ESUNWALLET +
+                "&TAIWANPAY=" + TAIWANPAY +
+                "&FLUA=" + FLUA +
+                "&CVSCOM=" + CVSCOM +
+                "&EZPAY=" + EZPAY +
+                "&EZPWECHAT=" + EZPWECHAT +
+                "&LgsType=" + LgsType;
     }
+
 
 }
