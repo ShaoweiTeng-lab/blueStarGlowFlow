@@ -47,10 +47,42 @@ public class GoldFlowService {
         formRequest.setVersion("2.0");
         formRequest.setTimeStamp(t);
         formRequest.setMerchantOrderNo("test_store_Mpg_" + t);
+        formRequest.setCVSCOM(0);//關閉物流
         String tradeInfo = null;
         try {
             //將formData 進行 AES256CBC 加密
+            System.out.println(formRequest.toFormDataString());
+            tradeInfo = AES256CBCUtils.encrypt(formRequest.toFormDataString(), key, iv);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        //依照藍星金流格式串接  StringUpper(sha256(HashKey=key&tradeInfo&HashIV))
+        String tradeSha = SHA256Utils.sha256("HashKey=" + key + "&" + tradeInfo + "&" + "HashIV=" + iv).toUpperCase();
+        FormResponse formResponse = new FormResponse();
+        formResponse.setMerchantID(mid);
+        formResponse.setTradeInfo(tradeInfo);
+        formResponse.setTradeSha(tradeSha);
+        formResponse.setVersion(2.0);
+        //將加密資料返回前端後 由前端對藍星發請求,之後倒轉轉頁到藍星付款頁
+        return formResponse;
+    }
 
+    /**
+     * 生成物流訂單
+     */
+    public FormResponse createOrderLogisticInfo(FormRequest formRequest) {
+        long t = System.currentTimeMillis();
+        formRequest.setMerchantID(mid);
+        formRequest.setRespondType("String");
+        formRequest.setNotifyURL(notifyURL);
+        formRequest.setVersion("2.0");
+        formRequest.setTimeStamp(t);
+        formRequest.setMerchantOrderNo("test_store_Mpg_" + t);
+        formRequest.setCVSCOM(2);//啟用物流超商付款 , 若不註解此行則 付款後取貨
+        String tradeInfo = null;
+        try {
+            //將formData 進行 AES256CBC 加密
+            System.out.println(formRequest.toFormDataString());
             tradeInfo = AES256CBCUtils.encrypt(formRequest.toFormDataString(), key, iv);
         } catch (Exception e) {
             throw new RuntimeException(e);

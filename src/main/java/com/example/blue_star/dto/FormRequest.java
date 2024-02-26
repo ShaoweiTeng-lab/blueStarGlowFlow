@@ -48,45 +48,56 @@ public class FormRequest {
     private String LgsType;//物流型態 B2B = 大宗寄倉 C2C = 店到店
 
     public String toFormDataString() {
-        return "MerchantID=" + MerchantID +
-                "&RespondType=" + RespondType +
-                "&TimeStamp=" + TimeStamp +
-                "&Version=" + Version +
-                "&MerchantOrderNo=" + MerchantOrderNo +
-                "&Amt=" + Amt +
-                "&ItemDesc=" + ItemDesc +
-                "&LangType=" + LangType +
-                "&TradeLimit=" + TradeLimit +
-                "&ExpireDate=" + ExpireDate +
-                "&ReturnUrl=" + ReturnUrl +
-                "&NotifyURL=" + NotifyURL +
-                "&CustomerURL=" + CustomerURL +
-                "&Email=" + Email +
-                "&EmailModify=" + EmailModify +
-                "&LoginType=" + LoginType +
-                "&OrderComment=" + OrderComment +
-                "&CREDIT=" + CREDIT +
-                "&ANDROIDPAY=" + ANDROIDPAY +
-                "&SAMSUNGPAY=" + SAMSUNGPAY +
-                "&LINEPAY=" + LINEPAY +
-                "&ImageUrl=" + ImageUrl +
-                "&InstFlag=" + InstFlag +
-                "&CreditRed=" + CreditRed +
-                "&UNIONPAY=" + UNIONPAY +
-                "&CREDITAE=" + CREDITAE +
-                "&WEBATM=" + WEBATM +
-                "&VACC=" + VACC +
-                "&BankType=" + BankType +
-                "&CVS=" + CVS +
-                "&BARCODE=" + BARCODE +
-                "&ESUNWALLET=" + ESUNWALLET +
-                "&TAIWANPAY=" + TAIWANPAY +
-                "&FLUA=" + FLUA +
-                "&CVSCOM=" + CVSCOM +
-                "&EZPAY=" + EZPAY +
-                "&EZPWECHAT=" + EZPWECHAT +
-                "&LgsType=" + LgsType;
+        StringBuilder formDataBuilder = new StringBuilder();
+
+        appendIfNotNull(formDataBuilder, "MerchantID", MerchantID);
+        appendIfNotNull(formDataBuilder, "RespondType", RespondType);
+        appendIfNotNull(formDataBuilder, "TimeStamp", TimeStamp);
+        appendIfNotNull(formDataBuilder, "Version", Version);
+        appendIfNotNull(formDataBuilder, "MerchantOrderNo", MerchantOrderNo);
+        appendIfNotNull(formDataBuilder, "Amt", Amt);
+        appendIfNotNull(formDataBuilder, "ItemDesc", ItemDesc);
+        appendIfNotNull(formDataBuilder, "LangType", LangType);
+        appendIfNotNull(formDataBuilder, "TradeLimit", TradeLimit);
+        appendIfNotNull(formDataBuilder, "ExpireDate", ExpireDate);
+        appendIfNotNull(formDataBuilder, "ReturnUrl", ReturnUrl);
+        appendIfNotNull(formDataBuilder, "NotifyURL", NotifyURL);
+        appendIfNotNull(formDataBuilder, "CustomerURL", CustomerURL);
+        appendIfNotNull(formDataBuilder, "Email", Email);
+        appendIfNotNull(formDataBuilder, "EmailModify", EmailModify);
+        appendIfNotNull(formDataBuilder, "LoginType", LoginType);
+        appendIfNotNull(formDataBuilder, "OrderComment", OrderComment);
+        appendIfNotNull(formDataBuilder, "CREDIT", CREDIT);
+        appendIfNotNull(formDataBuilder, "ANDROIDPAY", ANDROIDPAY);
+        appendIfNotNull(formDataBuilder, "SAMSUNGPAY", SAMSUNGPAY);
+        appendIfNotNull(formDataBuilder, "LINEPAY", LINEPAY);
+        appendIfNotNull(formDataBuilder, "ImageUrl", ImageUrl);
+        appendIfNotNull(formDataBuilder, "InstFlag", InstFlag);
+        appendIfNotNull(formDataBuilder, "CreditRed", CreditRed);
+        appendIfNotNull(formDataBuilder, "UNIONPAY", UNIONPAY);
+        appendIfNotNull(formDataBuilder, "CREDITAE", CREDITAE);
+        appendIfNotNull(formDataBuilder, "WEBATM", WEBATM);
+        appendIfNotNull(formDataBuilder, "VACC", VACC);
+        appendIfNotNull(formDataBuilder, "BankType", BankType);
+        appendIfNotNull(formDataBuilder, "CVS", CVS);
+        appendIfNotNull(formDataBuilder, "BARCODE", BARCODE);
+        appendIfNotNull(formDataBuilder, "ESUNWALLET", ESUNWALLET);
+        appendIfNotNull(formDataBuilder, "TAIWANPAY", TAIWANPAY);
+        appendIfNotNull(formDataBuilder, "FLUA", FLUA);
+        appendIfNotNull(formDataBuilder, "CVSCOM", CVSCOM);
+        appendIfNotNull(formDataBuilder, "EZPAY", EZPAY);
+        appendIfNotNull(formDataBuilder, "EZPWECHAT", EZPWECHAT);
+        appendIfNotNull(formDataBuilder, "LgsType", LgsType);
+
+        return formDataBuilder.toString();
     }
 
-
+    private void appendIfNotNull(StringBuilder builder, String key, Object value) {
+        if (value != null) {
+            if (builder.length() > 0) {
+                builder.append("&");
+            }
+            builder.append(key).append("=").append(value);
+        }
+    }
 }

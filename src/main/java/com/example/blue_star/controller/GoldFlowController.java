@@ -20,9 +20,20 @@ public class GoldFlowController {
         return goldFlowService.getSHAEncrypt();
     }
 
+    /**
+     * 創立金流
+     * */
     @PostMapping("/createOrder")
     public FormResponse createOrder(@ModelAttribute FormRequest formRequest){
         return goldFlowService.createOrderInfo(formRequest);
+    }
+
+    /**
+     * 創立金流+物流
+     * */
+    @PostMapping("/createLogistic")
+    public FormResponse createLogistic(@ModelAttribute FormRequest formRequest){
+        return goldFlowService.createOrderLogisticInfo(formRequest);
     }
 
     @PostMapping("/completePay")
